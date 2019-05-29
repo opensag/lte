@@ -16,8 +16,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 define Package/ecmdemo
-  SECTION:=utils
-  CATEGORY:=Utilities
+  SECTION:=base
+  CATEGORY:=ECM DEMO
   TITLE:=ETL device auto dial ECM tool
   DEPENDS:=+libc \
   		   +kmod-usb-net +kmod-usb-net-cdc-ether \
