@@ -4,8 +4,8 @@
  * @Copyright:                      GoSUNCN
 * @Website:                         www.ztewelink.com
 * @Email:                           ztewelink@zte.com.cn
-* @version:                         "ECM_CALLV1.0.1B04"
-* @date:                            "2019-03-11"
+* @version:                         "ECM_CALLV1.0.1B05"
+* @date:                            "2019-07-18"
 * ============================================================================*/
 
 #include <pthread.h>
@@ -89,7 +89,10 @@ unsigned int ttyusb_search_port(unsigned int which_port, char* ttyusb_path, unsi
 unsigned   int  ttyusb_get_thxd_failed_flg(void);
 
 
-unsigned   int  ttyusb_get_clear_failed_flg(void);
+/*add lixiaoping for 1068385 start*/
+void  ttyusb_get_clear_failed_flg(void);
+/*add lixiaoping for 1068385 end*/
+
 /*add liwei for port error end*/
 
 

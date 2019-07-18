@@ -4,8 +4,8 @@
  * @Copyright:                      GoSUNCN
 * @Website:                         www.ztewelink.com
 * @Email:                           ztewelink@zte.com.cn
-* @version:                         "ECM_CALLV1.0.1B02"
-* @date:                            "2019-02-11"
+* @version:                         "ECM_CALLV1.0.1B05"
+* @date:                            "2019-07-18"
 
 * History:
 
@@ -81,6 +81,10 @@
 ......................................................................................ECM_CALLV1.0.1B04
 ......................................................................................Wei,LI,2019_03_11
 
+1. Resolve warning and issues
+......................................................................................For Alibaba Linux OpenWRT system.
+......................................................................................ECM_CALLV1.0.1B05
+......................................................................................XiaoPing,LI/Wei,LI, 2019_07_18
 
 * ============================================================================*/
 
@@ -128,9 +132,9 @@
 #define ECM_AUTO_RETRY_INTV                    15    /*ECM auto connnect interv time*/
 
 
-#define ECM_CALL_VERSION                       "ECM_CALLV1.0.1B04"
+#define ECM_CALL_VERSION                       "ECM_CALLV1.0.1B05"
 
-#define ECM_CALL_DATE                          "2019-03-11"
+#define ECM_CALL_DATE                          "2019-07-18"
 
 #define ECM_CALL_AUTO_PORT                     ECM_DEMO_ON
 

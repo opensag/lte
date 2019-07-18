@@ -375,7 +375,9 @@ void  ECM_display_autocfg(ECM_auto_monitor_t* ptr_autocfg)
 
         ECM_print_ext("RCV_STRENGTH=%01d",         ptr_autocfg->net_recv_strength);
 
-        if ((0 <= ptr_autocfg->rf_recv_strength)&&(ptr_autocfg->rf_recv_strength < 10))
+        /*modify by lixiaoping for fix gswerr 623931 start*/
+        if (ptr_autocfg->rf_recv_strength < 10)
+        /*modify by lixiaoping for fix gswerr 623931 end*/
         {
             ECM_print_ext("RF_STRENGTH=LOW");
         }

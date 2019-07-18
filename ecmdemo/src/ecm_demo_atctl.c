@@ -177,7 +177,9 @@ static void   ECM_auto_save_imei(void)
 {
     int i = 0 ;
     int j = 0 ;
-    for (j=0,i=0;(j<itc_tty_at_len)&&(j<itc_tty_at_len);j++)
+    /*modify by lixiaoping for fix 579591 start*/
+    for (j=0,i=0;(j<strlen(itc_tty_at_buff))&&(j<itc_tty_at_len);j++)
+    /*modify by lixiaoping for fix 579591 end*/
     {            
         if (('0'<=itc_tty_at_buff[j]) && (itc_tty_at_buff[j]<='9'))
         {
@@ -1305,16 +1307,24 @@ void ECM_usr_cfg_set(user_cfg_item_t* cfg, char* ipv4v6, char* apn)
 
     if ((cfg)&&(ipv4v6))
     {
-        if ((strlen(ipv4v6)<ECM_V4V6_MAX_LEN)&&(0<strlen(ipv4v6)))
+       /*add by lixiaoping for fix issue id 721682 start*/
+        if ((strlen(ipv4v6)<sizeof(cfg->para_ipv4v6))&&(0<strlen(ipv4v6)))
+       /*add by lixiaoping for fix issue id 721682 end*/
         {           
             cfg->para_ipv4v6_flag = 1 ;
             memcpy((void*)cfg->para_ipv4v6,(void*)ipv4v6,strlen(ipv4v6));
+        }
+        else
+        {
+            cfg->para_ipv4v6_flag = 0 ;
         }
     }
 
     if ((cfg)&&(apn))
     {
-        if ((strlen(apn)<ECM_APN_MAX_LEN)&&(0<strlen(apn)))
+        /*add by lixiaoping for fix issue id 721682 start*/
+        if ((strlen(apn)<sizeof(cfg->para_apn))&&(0<strlen(apn)))
+        /*add by lixiaoping for fix issue id 721682 end*/
         {           
             cfg->para_apn_flag = 1 ;
             memcpy((void*)cfg->para_apn,(void*)apn,strlen(apn));
@@ -2529,8 +2539,9 @@ ECM_SM_RSLT_T ECM_query_tty_csq(ttyusb_dev_t* p_serial, ECM_SM_EVENT_T evt,
                 pthread_mutex_lock(&usr_monitor_mux);
                 var_rf_recv_strength = usr_monitor_info.rf_recv_strength;
                 pthread_mutex_unlock(&usr_monitor_mux);
-
-                if ((0 <= var_rf_recv_strength) && (var_rf_recv_strength < 10)) {
+                /*add lixiaoping for fix 106847 start*/
+                if (var_rf_recv_strength < 10) {
+                /*add lixiaoping for fix 106847 end*/
                     ECM_aux_set_siglevel_led_low();
                 } else if ((10 <= var_rf_recv_strength) && (var_rf_recv_strength < 20)) {
                     ECM_aux_set_siglevel_led_middle();
@@ -4491,6 +4502,9 @@ unsigned int ECM_exec_at_flow(ttyusb_dev_t* p_serial, ecm_sm_t* flow,user_cfg_it
                     ttyusb_cancel_thxd(p_serial);
                 }
                 error = at_err_id;
+                /*add liwei for resolved issue 579622 start*/
+                pthread_mutex_unlock(&itc_msg_mux);
+                /*add liwei for resolved issue 579622 end*/
                 break ;
             }
             else if (ECM_SM_EXEC_TERM==rflow)
@@ -4500,12 +4514,18 @@ unsigned int ECM_exec_at_flow(ttyusb_dev_t* p_serial, ecm_sm_t* flow,user_cfg_it
                     ttyusb_cancel_thxd(p_serial);
                 }
                 error = at_err_id;
+                /*add liwei for resolved issue 579622 start*/
+                pthread_mutex_unlock(&itc_msg_mux);
+                /*add liwei for resolved issue 579622 end*/
                 break ;
             }
             else if (ECM_SM_EXEC_SUCC==rflow)
             {
                 /* exec successfully */
                 error = 0;
+                /*add liwei for resolved issue 579622 start*/
+                pthread_mutex_unlock(&itc_msg_mux);
+                /*add liwei for resolved issue 579622 end*/
                 break ;
             }
             else 
@@ -4810,7 +4830,12 @@ ECM_AUTO_SM_JUMP_T ECM_auto_sm_callup(ttyusb_dev_t* p_serial, ECM_AUTO_SM_EVENT_
     ECM_SM_RSLT_T rflow = ECM_SM_EXEC_KEEP;
     unsigned int at_err_id = 0 ;
 
-    *error = 0 ;
+    /*add liwei for fix issue id 579606 start*/
+    if (NULL!=error)
+    {
+        *error = 0 ;
+    }
+    /*add liwei for fix issue id 579606 end*/    
 
     if (ECM_AUTO_SM_ENTRY_EVT==evt)
     {
@@ -4943,7 +4968,13 @@ ECM_AUTO_SM_JUMP_T ECM_auto_sm_calldown(ttyusb_dev_t* p_serial, ECM_AUTO_SM_EVEN
     ECM_SM_RSLT_T rflow = ECM_SM_EXEC_KEEP;
     unsigned int at_err_id = 0 ;
 
-    *error = 0 ;
+    /*add lixiaoping for fix issue id 579606 start*/
+    if (NULL!=error)
+    {
+        *error = 0 ;
+    }
+    /*add lixiaoping for fix issue id 579606 end*/ 
+
 
     if (ECM_AUTO_SM_ENTRY_EVT==evt)
     {
@@ -5052,7 +5083,13 @@ ECM_AUTO_SM_JUMP_T ECM_auto_sm_reboot(ttyusb_dev_t* p_serial, ECM_AUTO_SM_EVENT_
     ECM_SM_RSLT_T rflow = ECM_SM_EXEC_KEEP;
     unsigned int at_err_id = 0 ;
 
-    *error = 0 ;
+    /*add lixiaoping for fix issue id 579606 start*/
+    if (NULL!=error)
+    {
+        *error = 0 ;
+    }
+    /*add lixiaoping for fix issue id 579606 end*/ 
+
 
     if (ECM_AUTO_SM_ENTRY_EVT==evt)
     {
@@ -5184,7 +5221,13 @@ ECM_AUTO_SM_JUMP_T ECM_auto_sm_under_connect(ttyusb_dev_t* p_serial, ECM_AUTO_SM
     static unsigned int        flag_delay_run_flow = 0 ;
 
 
-    *error = 0 ;
+    /*add lixiaoping for fix issue id 579606 start*/
+    if (NULL!=error)
+    {
+        *error = 0 ;
+    }
+    /*add lixiaoping for fix issue id 579606 end*/ 
+
 
     if (ECM_AUTO_SM_ENTRY_EVT==evt)
     {
@@ -5353,7 +5396,13 @@ ECM_AUTO_SM_JUMP_T ECM_auto_sm_under_disconn(ttyusb_dev_t* p_serial, ECM_AUTO_SM
     static unsigned    int     cmd_retry_cnt = 0 ;
     static unsigned int        flag_delay_run_flow = 0 ;
 
-    *error = 0 ;
+    /*add lixiaoping for fix issue id 579606 start*/
+    if (NULL!=error)
+    {
+        *error = 0 ;
+    }
+    /*add lixiaoping for fix issue id 579606 end*/    
+
 
     if (ECM_AUTO_SM_ENTRY_EVT==evt)
     {

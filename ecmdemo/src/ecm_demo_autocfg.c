@@ -261,7 +261,7 @@ static int ECM_sem_op(int semid, struct sembuf *sops, unsigned nsops)
         {       
            //ECM_log(ECM_LOG_L_1,"ECM_sem_op error%01d",retval);
            //ECM_log(ECM_LOG_L_1,"semop error: %s. \n", sys_errlist[errno]);
-           ECM_log(ECM_LOG_L_1,"semop error: %s. \n", errno);
+           ECM_log(ECM_LOG_L_1,"semop error: %d. \n", errno);
         }    
     }
 

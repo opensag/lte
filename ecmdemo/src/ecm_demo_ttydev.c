@@ -253,7 +253,10 @@ unsigned   int  ttyusb_get_thxd_failed_flg(void)
 {
     return g_ttyusb_recv_thxd_fail_flag ;
 }
-unsigned   int  ttyusb_get_clear_failed_flg(void)
+
+/*modify by lixiaoping for 1068385 start*/
+void  ttyusb_get_clear_failed_flg(void)
+/*modify by lixiaoping for 1068385 end*/
 {
     g_ttyusb_recv_thxd_fail_flag = 0 ;
 }
@@ -439,17 +442,18 @@ unsigned int    ttyusb_start_recv(ttyusb_dev_t* p_serial)
 
 void ttyusb_init(ttyusb_dev_t* p_serial)
 {
+    /*modify by lixiaoping for fix issue id 1068407 1068411 1068432 start*/
     if (p_serial)
     {
-        /*add liwei for start resolve fd issue start*/
-        if(-1 != p_serial->tty_fd)
-        {
-            ECM_log(ECM_LOG_L_3,"[info] unresolved ttyusb_init fd=%lu",p_serial->tty_fd);
-        }
-        /*add liwei for start resolve fd issue end*/
         bzero((void*)p_serial,sizeof(ttyusb_dev_t));
         p_serial->tty_fd = -1 ;
+        ECM_log(ECM_LOG_L_3,"[info] ttyusb_init clear object of ttyusb_dev_t");
     }
+    else
+    {
+        ECM_log(ECM_LOG_L_3,"[error] ttyusb_init clear object Error PTR");
+    }
+    /*modify by lixiaoping for fix issue id 1068407 1068411 1068432 end*/
 }
 
 unsigned int ttyusb_config(ttyusb_dev_t* p_serial, char* path, unsigned int path_len)
@@ -538,7 +542,9 @@ unsigned int ttyusb_open(ttyusb_dev_t* p_serial)
         /*add liwei for start resolve fd issue start*/
         if(-1 != p_serial->tty_fd)
         {
-            ECM_log(ECM_LOG_L_2,"[info] ttyusb_open fd=%lu",p_serial->tty_fd);
+        /*add lixiaoping for fix issue id 1068412 start*/
+            ECM_log(ECM_LOG_L_2,"[info] ttyusb_open fd=%d",p_serial->tty_fd);
+        /*add lixiaoping for fix issue id 1068412 end*/
         }
         /*add liwei for start resolve fd issue end*/
 
@@ -791,8 +797,9 @@ int ttyusb_drv_startwith(const char *line, const char *prefix)
     return *prefix == '\0';
 }
 
-
-int ttyUSB_drv_get_path(const ttyusb_drv_xport_t * device, char * path, char *ttyusbx)
+/*modify by lixiaoping for fix issue id 721680 start */
+int ttyUSB_drv_get_path(const ttyusb_drv_xport_t * device, const char* path, char *ttyusbx)
+/*modify by lixiaoping for fix issue id 721680 end */
 {
     DIR   *ttyusb_dir;
     struct dirent *dent;
@@ -965,7 +972,9 @@ unsigned int ttyusb_search_port(unsigned int which_port, char* ttyusb_path, unsi
                     sprintf(str_temp_path,"%s%s/%s:%s.%s/",TTYUSB_DRV_PATH,dent->d_name,dent->d_name,bConfigurationValue,device->bIfaceNumb_DATA);
                 }
                 ECM_log(ECM_LOG_L_4,"[info] AT Interface path = %s",str_temp_path);
-                ret = ttyUSB_drv_get_path(device, str_temp_path, str_ttyusb_x);
+                /*add by lixiaoping for fix issue id 721680 start */
+                ret = ttyUSB_drv_get_path(device, (const char*)str_temp_path, str_ttyusb_x);
+                /*add by lixiaoping for fix issue id 721680 end */
                 if( (!ret) && ttyusb_drv_startwith(str_ttyusb_x, "ttyUSB") )
                 {
                     bzero(ttyusb_path,TTYUSB_DRV_PATH_MAX);

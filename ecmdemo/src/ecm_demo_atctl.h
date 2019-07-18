@@ -4,8 +4,8 @@
  * @Copyright:                      GoSUNCN
 * @Website:                         www.ztewelink.com
 * @Email:                           ztewelink@zte.com.cn
-* @version:                         "ECM_CALLV1.0.1B04"
-* @date:                            "2019-03-11"
+* @version:                         "ECM_CALLV1.0.1B05"
+* @date:                            "2019-07-18"
 * ============================================================================*/
 
 
